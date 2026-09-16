@@ -8,12 +8,15 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
-      - run: |
-          if [! -f "android/app/build.gradle" ]; then
-            flutter create. --platforms=android
-          fi
+          channel: 'stable'
+      - name: Restore main.dart after create
+        run: |
+          cp lib/main.dart /tmp/m.dart
+          flutter create. --platforms=android --project-name physio_clinic
+          cp /tmp/m.dart lib/main.dart
+          cat pubspec.yaml
       - run: flutter pub get
-      - run: flutter build apk --release
+      - run: flutter build apk --release --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: physio-clinic-apk
